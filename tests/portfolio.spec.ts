@@ -2,6 +2,9 @@ import { expect, test } from "@playwright/test";
 
 test("desktop portfolio interactions and layout", async ({ page }) => {
   const errors: string[] = [];
+  await page.route("https://formspree.io/f/xwleobob", async (route) => {
+    await route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' });
+  });
   page.on("console", (message) => {
     if (message.type() === "error") errors.push(message.text());
   });
@@ -32,8 +35,17 @@ test("desktop portfolio interactions and layout", async ({ page }) => {
   await expect(page.getByText("Enter a valid email address.")).toBeVisible();
   await expect(page.getByText("Please add a little more detail.")).toBeVisible();
 
-  await page.getByRole("link", { name: "Download Resume" }).last().click();
-  await expect(page.getByRole("status")).toContainText("Resume PDF is being updated");
+  await page.getByLabel("Name").fill("Portfolio Visitor");
+  await page.getByLabel("Email").fill("visitor@example.com");
+  await page.getByLabel("Message").fill("I would like to discuss a suitable engineering opportunity.");
+  await page.getByRole("button", { name: "Send Message" }).click();
+  await expect(page.getByRole("status")).toContainText("message has been sent successfully");
+
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("link", { name: "Download Resume" }).last().click(),
+  ]);
+  expect(download.suggestedFilename()).toBe("aditya-kumar-resume.pdf");
 
   const github = page.getByRole("link", { name: /github.com\/kraditya0/ });
   await expect(github).toHaveAttribute("href", "https://github.com/kraditya0");

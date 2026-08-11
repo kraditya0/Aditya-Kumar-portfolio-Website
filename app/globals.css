@@ -1099,7 +1099,15 @@ button {
 .form-field [aria-invalid="true"] { border-color: var(--coral); }
 .form-error { display: block; margin-top: 7px; color: var(--coral); font-size: 10px; }
 .submit-button { min-width: 160px; }
+.submit-button:disabled { cursor: wait; opacity: .72; transform: none; }
+.submit-spinner { animation: submit-spin 900ms linear infinite; }
+.form-feedback { min-height: 23px; margin-top: 12px; }
+.form-success,.form-submit-error { margin: 0; font-size: 11px; line-height: 1.5; }
+.form-success { color: var(--lime); }
+.form-submit-error { color: var(--coral); }
 .form-note { margin: 13px 0 0; color: var(--dim); font-size: 9px; }
+
+@keyframes submit-spin { to { transform: rotate(360deg); } }
 
 .final-cta { position: relative; min-height: 560px; display: grid; place-items: center; overflow: hidden; background: var(--lime); color: var(--ink); }
 .cta-grid { opacity: .2; background-image: linear-gradient(rgba(8,10,12,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(8,10,12,.14) 1px,transparent 1px); mask-image: radial-gradient(circle at center,black,transparent 80%); }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Check, LoaderCircle, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { contact } from "@/data/content";
 import { ResumeLink } from "./ResumeLink";
@@ -10,10 +10,15 @@ type Fields = { name: string; email: string; message: string };
 type Errors = Partial<Record<keyof Fields, string>>;
 
 const initialFields: Fields = { name: "", email: "", message: "" };
+const formEndpoint =
+  process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ?? "https://formspree.io/f/xwleobob";
+
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 export function Contact() {
   const [fields, setFields] = useState(initialFields);
   const [errors, setErrors] = useState<Errors>({});
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
 
   function validate() {
     const next: Errors = {};
@@ -24,18 +29,39 @@ export function Contact() {
     return Object.keys(next).length === 0;
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!validate()) return;
+    if (!validate() || submitStatus === "submitting") return;
 
-    const subject = encodeURIComponent(`Portfolio enquiry from ${fields.name}`);
-    const body = encodeURIComponent(`${fields.message}\n\nFrom: ${fields.name}\nEmail: ${fields.email}`);
-    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+    setSubmitStatus("submitting");
+
+    const formData = new FormData();
+    formData.append("name", fields.name.trim());
+    formData.append("email", fields.email.trim());
+    formData.append("message", fields.message.trim());
+    formData.append("_subject", `Portfolio enquiry from ${fields.name.trim()}`);
+
+    try {
+      const response = await fetch(formEndpoint, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) throw new Error("Form submission failed");
+
+      setFields(initialFields);
+      setErrors({});
+      setSubmitStatus("success");
+    } catch {
+      setSubmitStatus("error");
+    }
   }
 
   function update(field: keyof Fields, value: string) {
     setFields((current) => ({ ...current, [field]: value }));
     if (errors[field]) setErrors((current) => ({ ...current, [field]: undefined }));
+    if (submitStatus !== "idle" && submitStatus !== "submitting") setSubmitStatus("idle");
   }
 
   return (
@@ -97,10 +123,30 @@ export function Contact() {
               />
               {errors.message && <span className="form-error" id="message-error">{errors.message}</span>}
             </div>
-            <button className="button button-primary submit-button" type="submit">
-              Send Message <ArrowRight size={18} />
+            <button
+              className="button button-primary submit-button"
+              type="submit"
+              disabled={submitStatus === "submitting"}
+            >
+              {submitStatus === "submitting" ? (
+                <>Sending <LoaderCircle className="submit-spinner" size={18} /></>
+              ) : submitStatus === "success" ? (
+                <>Message Sent <Check size={18} /></>
+              ) : (
+                <>Send Message <ArrowRight size={18} /></>
+              )}
             </button>
-            <p className="form-note">Opens your email client. No form data is stored.</p>
+            <div className="form-feedback" aria-live="polite">
+              {submitStatus === "success" && (
+                <p className="form-success" role="status">Thanks. Your message has been sent successfully.</p>
+              )}
+              {submitStatus === "error" && (
+                <p className="form-submit-error" role="alert">
+                  The message could not be sent. Please try again or email me directly.
+                </p>
+              )}
+            </div>
+            <p className="form-note">Delivered securely through Formspree.</p>
           </form>
         </Reveal>
       </div>

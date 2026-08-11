@@ -27,6 +27,7 @@ import { Navbar } from "./Navbar";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
 import { Reveal } from "./Reveal";
+import { WhatsAppButton } from "./WhatsAppButton";
 
 const buildCards = [
   {
@@ -86,6 +87,7 @@ export function Portfolio() {
         <FinalCta />
       </main>
       <Footer />
+      <WhatsAppButton />
       <ProjectModal project={selectedProject} onClose={closeProject} />
       <AnimatePresence>
         {notice && (

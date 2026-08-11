@@ -1,16 +1,23 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const links = ["Home", "About", "Experience", "Skills", "Projects", "Contact"];
+type Theme = "dark" | "light";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("Home");
+  const [theme, setTheme] = useState<Theme>("dark");
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const current = document.documentElement.dataset.theme;
+    setTheme(current === "light" ? "light" : "dark");
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -43,6 +50,14 @@ export function Navbar() {
     };
   }, [open]);
 
+  function toggleTheme() {
+    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+    document.documentElement.style.colorScheme = nextTheme;
+    localStorage.setItem("portfolio-theme", nextTheme);
+  }
+
   return (
     <motion.header
       className={`navbar-shell ${scrolled ? "navbar-scrolled" : ""}`}
@@ -69,20 +84,30 @@ export function Navbar() {
           ))}
         </div>
 
-        <a href="#contact" className="nav-cta desktop-cta">
-          Let&apos;s Talk <ArrowUpRight size={16} aria-hidden="true" />
-        </a>
-
-        <button
-          className="icon-button mobile-menu-button"
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-          aria-label={open ? "Close navigation" : "Open navigation"}
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="navbar-actions">
+          <button
+            className="icon-button theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <a href="#contact" className="nav-cta desktop-cta">
+            Let&apos;s Talk <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+          <button
+            className="icon-button mobile-menu-button"
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>

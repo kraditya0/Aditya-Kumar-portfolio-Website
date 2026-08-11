@@ -10,6 +10,7 @@ test("desktop portfolio interactions and layout", async ({ page }) => {
   });
   page.on("pageerror", (error) => errors.push(error.message));
 
+  await page.emulateMedia({ colorScheme: "dark" });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/", { waitUntil: "networkidle" });
 
@@ -17,6 +18,16 @@ test("desktop portfolio interactions and layout", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /Building intelligent systems/ })).toBeVisible();
   await expect(page.getByText("Ments, IIT Madras")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Selected Projects" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Contact Aditya on WhatsApp" })).toHaveAttribute(
+    "href",
+    "https://wa.me/918766382326?text=Hi%20Aditya%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20connect.",
+  );
+
+  await page.getByRole("button", { name: "Switch to light theme" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(244, 247, 243)");
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.getByRole("button", { name: "Switch to dark theme" })).toBeVisible();
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
@@ -60,7 +71,7 @@ test("mobile menu, project layout, and reduced motion", async ({ page }) => {
   });
   page.on("pageerror", (error) => errors.push(error.message));
 
-  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "dark" });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "networkidle" });
 

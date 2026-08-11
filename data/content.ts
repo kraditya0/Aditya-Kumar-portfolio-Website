@@ -181,6 +181,8 @@ export const projects: Project[] = [
     implementation:
       "The pipeline combines text vectorization, feature extraction, LightGBM, XGBoost, ensemble modeling, and hyperparameter optimization.",
     result: "Achieved a 0.81+ Kaggle leaderboard score.",
+    github:
+      "https://github.com/kraditya0/-Machine-learning-project_Comment-Category-Prediction",
   },
   {
     id: "placement",
@@ -211,6 +213,7 @@ export const projects: Project[] = [
     implementation:
       "Flask REST APIs and Vue.js power the application, with SQLite persistence, Redis caching, Celery jobs, and JWT authentication.",
     result: "Delivered the complete Admin, Company, and Student workflow described in the project scope.",
+    github: "https://github.com/kraditya0/Placement-Portal-Webapp",
   },
   {
     id: "expense",
@@ -238,5 +241,6 @@ export const projects: Project[] = [
     implementation:
       "A modular Flask backend exposes REST APIs over SQLite, while JavaScript and Chart.js render analytics and APScheduler supports automated tasks.",
     result: "Created an integrated workflow for expense records, budgets, goals, analytics, and notifications.",
+    github: "https://github.com/kraditya0/smart-expenses-tracker",
   },
 ];

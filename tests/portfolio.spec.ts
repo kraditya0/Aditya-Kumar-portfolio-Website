@@ -23,6 +23,9 @@ test("desktop portfolio interactions and layout", async ({ page }) => {
     "https://wa.me/918766382326?text=Hi%20Aditya%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20connect.",
   );
   await expect(page.locator(".scroll-progress")).toBeVisible();
+  const firstProjectButton = page.getByRole("button", { name: /View Details/ }).first();
+  await firstProjectButton.hover();
+  await expect(page.locator(".cursor-follower")).toContainText("View");
 
   await page.getByRole("button", { name: "Switch to light theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
@@ -77,6 +80,7 @@ test("mobile menu, project layout, and reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "dark" });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator(".cursor-follower")).toHaveCount(0);
 
   const menu = page.getByRole("button", { name: "Open navigation" });
   await menu.click();

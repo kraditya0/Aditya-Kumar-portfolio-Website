@@ -5,8 +5,13 @@ import {
   ArrowRight,
   ArrowUpRight,
   Award,
+  AppWindow,
+  Boxes,
   BrainCircuit,
+  ChartNoAxesCombined,
   ChevronDown,
+  CircleHelp,
+  CloudUpload,
   Code2,
   Database,
   Github,
@@ -22,6 +27,7 @@ import { useCallback, useEffect, useState } from "react";
 import { contact, experience, projects, skillGroups, type Project } from "@/data/content";
 import { BackgroundEffects } from "./BackgroundEffects";
 import { Contact } from "./Contact";
+import { CursorFollower } from "./CursorFollower";
 import { Hero } from "./Hero";
 import { Navbar } from "./Navbar";
 import { ProjectCard } from "./ProjectCard";
@@ -51,7 +57,14 @@ const buildCards = [
   },
 ];
 
-const workflow = ["Problem", "Data", "Analysis", "Model / Backend", "Application", "Deployment"];
+const workflow = [
+  { label: "Problem", icon: CircleHelp },
+  { label: "Data", icon: Database },
+  { label: "Analysis", icon: ChartNoAxesCombined },
+  { label: "Model / Backend", icon: Boxes },
+  { label: "Application", icon: AppWindow },
+  { label: "Deployment", icon: CloudUpload },
+];
 
 export function Portfolio() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -74,6 +87,7 @@ export function Portfolio() {
       <a href="#main-content" className="skip-link">Skip to content</a>
       <BackgroundEffects />
       <ScrollProgress />
+      <CursorFollower />
       <Navbar />
       <main id="main-content">
         <Hero />
@@ -236,11 +250,51 @@ function Workflow() {
     <section className="section workflow-section">
       <div className="container">
         <SectionHeading kicker="Engineering flow" title="From ambiguity to deployment." lead="A connected workflow across data science and full-stack delivery." />
-        <Reveal className="workflow">
-          <motion.div className="workflow-progress" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: reduceMotion ? 0 : 1.4 }} />
-          {workflow.map((step, index) => (
-            <div className="workflow-step" key={step}><span>0{index + 1}</span><i /><strong>{step}</strong>{index < workflow.length - 1 && <ArrowRight size={16} />}</div>
-          ))}
+        <Reveal className="workflow-scene">
+          <div className="workflow-scene-grid" aria-hidden="true" />
+          <div className="workflow-rail" aria-hidden="true">
+            <motion.i
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: reduceMotion ? 0 : 1.35, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <motion.span
+              animate={reduceMotion ? undefined : { left: ["0%", "100%"] }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+          <div className="workflow-modules">
+            {workflow.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  className={`workflow-module workflow-module-${index + 1}`}
+                  key={step.label}
+                  data-cursor-interactive
+                  initial={reduceMotion ? false : { opacity: 0, y: 32, rotateX: 10 }}
+                  whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, rotateX: 0 }}
+                  viewport={{ once: true, amount: 0.35 }}
+                  transition={{ duration: 0.55, delay: reduceMotion ? 0 : index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="workflow-module-face">
+                    <div className="workflow-module-head">
+                      <span>0{index + 1}</span>
+                      <Icon size={20} aria-hidden="true" />
+                    </div>
+                    <strong>{step.label}</strong>
+                    <div className="workflow-module-port"><i /><span>CONNECTED</span></div>
+                  </div>
+                  {index < workflow.length - 1 && <ArrowRight className="workflow-module-arrow" size={16} aria-hidden="true" />}
+                </motion.div>
+              );
+            })}
+          </div>
+          <div className="workflow-legend" aria-hidden="true">
+            <span><i /> INPUT</span>
+            <span><i /> INTELLIGENCE</span>
+            <span><i /> DELIVERY</span>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -280,8 +334,8 @@ function Social() {
       <div className="container social-inner">
         <Reveal><p className="section-kicker">Connect / Collaborate</p><h2>Explore my work</h2></Reveal>
         <Reveal className="social-links" delay={0.08}>
-          <a href={contact.github} target="_blank" rel="noreferrer"><Github size={21} /><span><small>GitHub</small>github.com/kraditya0</span><ArrowUpRight size={18} /></a>
-          <a href={contact.linkedin} target="_blank" rel="noreferrer"><Linkedin size={21} /><span><small>LinkedIn</small>linkedin.com/in/aditya-kumar-1a43b91b1</span><ArrowUpRight size={18} /></a>
+          <a href={contact.github} target="_blank" rel="noreferrer" data-cursor-label="Open"><Github size={21} /><span><small>GitHub</small>github.com/kraditya0</span><ArrowUpRight size={18} /></a>
+          <a href={contact.linkedin} target="_blank" rel="noreferrer" data-cursor-label="Open"><Linkedin size={21} /><span><small>LinkedIn</small>linkedin.com/in/aditya-kumar-1a43b91b1</span><ArrowUpRight size={18} /></a>
         </Reveal>
       </div>
     </section>

@@ -23,11 +23,11 @@ export function ProjectCard({ project, index, onOpen }: { project: Project; inde
         <p className="project-description">{project.description}</p>
         <div className="tag-list">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
         <div className="project-actions">
-          <button className="project-detail-button" onClick={onOpen} type="button">
+          <button className="project-detail-button" onClick={onOpen} type="button" data-cursor-label="View">
             View Details <ArrowUpRight size={17} />
           </button>
           {project.github ? (
-            <a href={project.github} target="_blank" rel="noreferrer"><Github size={17} /> GitHub</a>
+            <a href={project.github} target="_blank" rel="noreferrer" data-cursor-label="Open"><Github size={17} /> GitHub</a>
           ) : (
             <span className="repo-unavailable"><Github size={16} /> GitHub </span>
           )}

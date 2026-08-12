@@ -94,6 +94,7 @@ export function Contact() {
               className="copy-email-button"
               type="button"
               onClick={copyEmail}
+              data-cursor-label="Copy"
               aria-label={emailCopied ? "Email copied" : "Copy email address"}
               title={emailCopied ? "Copied" : "Copy email"}
             >

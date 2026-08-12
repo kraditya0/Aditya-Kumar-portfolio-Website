@@ -193,6 +193,45 @@ button {
   transform-origin: left;
 }
 
+.cursor-follower {
+  position: fixed;
+  z-index: 175;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  translate: -50% -50%;
+  border: 1px solid color-mix(in srgb, var(--text) 56%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--panel) 28%, transparent);
+  color: var(--text);
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+  transition: width 180ms ease, height 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.cursor-follower.cursor-interactive {
+  width: 34px;
+  height: 34px;
+  border-color: var(--cyan);
+  background: color-mix(in srgb, var(--panel) 68%, transparent);
+}
+
+.cursor-follower.cursor-labeled {
+  width: 54px;
+  height: 28px;
+  border-radius: 14px;
+}
+
+.cursor-follower span {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 7px;
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
 .navbar-scrolled {
   background: rgba(8, 10, 12, 0.82);
   border-color: rgba(255, 255, 255, 0.07);
@@ -1098,16 +1137,33 @@ button {
 .repository-note { display: flex; align-items: center; gap: 8px; margin: 30px 0 0; color: var(--dim); font-size: 10px; }
 
 .workflow-section { overflow: hidden; }
-.workflow { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); border-block: 1px solid var(--line); }
-.workflow-progress { position: absolute; left: 0; right: 0; top: 80px; height: 1px; background: linear-gradient(90deg,var(--lime),var(--cyan),var(--coral)); transform-origin: left; }
-.workflow-step { position: relative; min-height: 180px; display: flex; flex-direction: column; padding: 24px 14px; border-right: 1px solid var(--line); }
-.workflow-step:last-child { border-right: 0; }
-.workflow-step > span { color: var(--dim); font-family: var(--font-geist-mono), monospace; font-size: 8px; }
-.workflow-step > i { position: relative; z-index: 1; width: 10px; height: 10px; margin-top: 50px; border: 2px solid var(--ink); border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 1px var(--lime); }
-.workflow-step:nth-child(4) > i,.workflow-step:nth-child(5) > i { background: var(--cyan); box-shadow: 0 0 0 1px var(--cyan); }
-.workflow-step:nth-child(6) > i,.workflow-step:nth-child(7) > i { background: var(--coral); box-shadow: 0 0 0 1px var(--coral); }
-.workflow-step strong { margin-top: 20px; font-size: 12px; font-weight: 560; }
-.workflow-step > svg { position: absolute; top: 106px; right: 10px; color: var(--dim); }
+.workflow-scene { position: relative; min-height: 390px; border: 1px solid var(--line); background: var(--panel); perspective: 1200px; overflow: hidden; }
+.workflow-scene::before { content: "SYSTEM PIPELINE / 06 STAGES"; position: absolute; z-index: 3; left: 22px; top: 18px; color: var(--dim); font-family: var(--font-geist-mono), monospace; font-size: 7px; }
+.workflow-scene-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size: 34px 34px; mask-image: linear-gradient(to bottom,black,transparent 92%); }
+.workflow-rail { position: absolute; z-index: 1; left: 5%; right: 5%; top: 52%; height: 2px; background: var(--line); }
+.workflow-rail > i { position: absolute; inset: 0; background: linear-gradient(90deg,var(--lime) 0 32%,var(--cyan) 42% 68%,var(--coral) 78% 100%); transform-origin: left; }
+.workflow-rail > span { position: absolute; left: 0; top: -4px; width: 10px; height: 10px; border: 2px solid var(--panel); border-radius: 50%; background: var(--text); box-shadow: 0 0 0 1px var(--text),0 0 18px color-mix(in srgb,var(--cyan) 55%,transparent); translate: -50% 0; }
+.workflow-modules { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 15px; padding: 62px 26px 76px; transform-style: preserve-3d; }
+.workflow-module { --stage-color: var(--lime); position: relative; min-width: 0; transform-style: preserve-3d; }
+.workflow-module:nth-child(3),.workflow-module:nth-child(4) { --stage-color: var(--cyan); }
+.workflow-module:nth-child(5),.workflow-module:nth-child(6) { --stage-color: var(--coral); }
+.workflow-module:nth-child(even) { margin-top: 34px; }
+.workflow-module-face { position: relative; min-height: 190px; display: flex; flex-direction: column; padding: 18px; border: 1px solid color-mix(in srgb,var(--stage-color) 46%,var(--line)); background: color-mix(in srgb,var(--panel) 94%,var(--stage-color)); box-shadow: 10px 12px 0 color-mix(in srgb,var(--stage-color) 8%,transparent),0 24px 45px rgba(0,0,0,.24); transform: rotateX(7deg) rotateY(-4deg); transform-origin: center bottom; transition: transform 260ms cubic-bezier(.22,1,.36,1),box-shadow 260ms ease,border-color 260ms ease; }
+.workflow-module-face::before { content: ""; position: absolute; left: 6px; right: -1px; top: -7px; height: 7px; border: 1px solid color-mix(in srgb,var(--stage-color) 30%,var(--line)); border-bottom: 0; background: color-mix(in srgb,var(--panel) 86%,var(--stage-color)); transform: skewX(-42deg); transform-origin: bottom; }
+.workflow-module-face::after { content: ""; position: absolute; top: -3px; right: -7px; bottom: 5px; width: 7px; border: 1px solid color-mix(in srgb,var(--stage-color) 30%,var(--line)); border-left: 0; background: color-mix(in srgb,var(--panel) 82%,var(--stage-color)); transform: skewY(-42deg); transform-origin: left; }
+.workflow-module:hover .workflow-module-face { border-color: var(--stage-color); box-shadow: 7px 9px 0 color-mix(in srgb,var(--stage-color) 12%,transparent),0 30px 54px rgba(0,0,0,.3); transform: translateY(-10px) rotateX(2deg) rotateY(-1deg); }
+.workflow-module-head { display: flex; align-items: center; justify-content: space-between; color: var(--stage-color); }
+.workflow-module-head span { font-family: var(--font-geist-mono),monospace; font-size: 8px; }
+.workflow-module-head svg { padding: 4px; border: 1px solid color-mix(in srgb,var(--stage-color) 45%,var(--line)); }
+.workflow-module-face > strong { max-width: 145px; margin-top: 60px; font-size: 14px; line-height: 1.25; font-weight: 600; }
+.workflow-module-port { display: flex; align-items: center; gap: 6px; margin-top: auto; color: var(--dim); font-family: var(--font-geist-mono),monospace; font-size: 6px; }
+.workflow-module-port i { width: 6px; height: 6px; border: 1px solid var(--stage-color); border-radius: 50%; background: color-mix(in srgb,var(--stage-color) 28%,transparent); box-shadow: 0 0 10px color-mix(in srgb,var(--stage-color) 28%,transparent); }
+.workflow-module-arrow { position: absolute; z-index: 5; right: -16px; top: 91px; color: var(--stage-color); filter: drop-shadow(0 0 5px color-mix(in srgb,var(--stage-color) 30%,transparent)); }
+.workflow-legend { position: absolute; z-index: 3; left: 22px; right: 22px; bottom: 18px; display: flex; justify-content: flex-end; gap: 18px; color: var(--dim); font-family: var(--font-geist-mono),monospace; font-size: 6px; }
+.workflow-legend span { display: flex; align-items: center; gap: 5px; }
+.workflow-legend i { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); }
+.workflow-legend span:nth-child(2) i { background: var(--cyan); }
+.workflow-legend span:nth-child(3) i { background: var(--coral); }
 
 .education-hero { position: relative; display: grid; grid-template-columns: 90px 1fr auto; align-items: center; min-height: 210px; padding: 32px; border: 1px solid var(--line-bright); background: var(--panel); overflow: hidden; }
 .education-hero::after { content: ""; position: absolute; width: 280px; height: 280px; right: -80px; top: -110px; border: 1px solid rgba(100,217,211,.15); border-radius: 50%; box-shadow: 0 0 0 45px rgba(100,217,211,.025),0 0 0 90px rgba(100,217,211,.018); }
@@ -1270,10 +1326,12 @@ button {
   .build-card h3 { margin-top: 70px; }
   .skills-grid { grid-template-columns: 1fr 1fr; }
   .skill-group-7 { grid-column: span 2; }
-  .workflow { grid-template-columns: repeat(3,1fr); }
-  .workflow-progress { display: none; }
-  .workflow-step:nth-child(3) { border-right: 0; }
-  .workflow-step:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+  .workflow-scene { min-height: 600px; }
+  .workflow-rail { display: none; }
+  .workflow-modules { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 28px 18px; padding: 64px 28px 78px; }
+  .workflow-module:nth-child(even) { margin-top: 0; }
+  .workflow-module-face { min-height: 190px; }
+  .workflow-module:nth-child(3n) .workflow-module-arrow { display: none; }
   .contact-grid { grid-template-columns: 1fr; gap: 65px; }
   .contact-copy { position: static; }
 }
@@ -1346,10 +1404,13 @@ button {
   .modal-grid { grid-template-columns: 1fr; }
   .modal-main { padding: 4px 20px 20px; border-right: 0; }
   .modal-aside { border-top: 1px solid var(--line); padding: 28px 20px; }
-  .workflow { grid-template-columns: 1fr 1fr; }
-  .workflow-step:nth-child(3) { border-right: 1px solid var(--line); }
-  .workflow-step:nth-child(2n) { border-right: 0; }
-  .workflow-step:nth-child(-n+4) { border-bottom: 1px solid var(--line); }
+  .workflow-scene { min-height: 0; }
+  .workflow-modules { grid-template-columns: 1fr; gap: 28px; padding: 62px 22px 76px; }
+  .workflow-module-face { min-height: 145px; padding: 17px; transform: rotateX(4deg) rotateY(-2deg); }
+  .workflow-module-face > strong { margin-top: 34px; }
+  .workflow-module:nth-child(3n) .workflow-module-arrow,.workflow-module-arrow { display: block; left: calc(50% - 8px); right: auto; top: auto; bottom: -23px; transform: rotate(90deg); }
+  .workflow-module:last-child .workflow-module-arrow { display: none; }
+  .workflow-legend { justify-content: flex-start; gap: 12px; }
   .education-hero { grid-template-columns: 1fr; gap: 25px; padding: 24px; }
   .education-copy h3 { font-size: 22px; }
   .education-copy > div { flex-direction: column; gap: 9px; }
@@ -1486,6 +1547,20 @@ button {
 :root[data-theme="light"] .project-card,
 :root[data-theme="light"] .project-modal {
   background: #ffffff;
+}
+
+:root[data-theme="light"] .workflow-scene-grid {
+  background-image:
+    linear-gradient(rgba(16,21,18,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(16,21,18,.045) 1px,transparent 1px);
+}
+
+:root[data-theme="light"] .workflow-module-face {
+  box-shadow: 10px 12px 0 color-mix(in srgb,var(--stage-color) 7%,transparent),0 24px 45px rgba(27,43,33,.12);
+}
+
+:root[data-theme="light"] .workflow-module:hover .workflow-module-face {
+  box-shadow: 7px 9px 0 color-mix(in srgb,var(--stage-color) 10%,transparent),0 30px 54px rgba(27,43,33,.16);
 }
 
 :root[data-theme="light"] .mock-sidebar,

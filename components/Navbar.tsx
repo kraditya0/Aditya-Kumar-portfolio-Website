@@ -89,6 +89,7 @@ export function Navbar() {
             className="icon-button theme-toggle"
             type="button"
             onClick={toggleTheme}
+            data-cursor-label="Theme"
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
             title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           >

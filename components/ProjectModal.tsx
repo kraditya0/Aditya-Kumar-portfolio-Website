@@ -79,7 +79,7 @@ export function ProjectModal({ project, onClose }: { project: Project | null; on
                 <h3>Technology Stack</h3>
                 <div className="tag-list">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
                 {project.github ? (
-                  <a className="button button-secondary modal-github" href={project.github} target="_blank" rel="noreferrer">
+                  <a className="button button-secondary modal-github" href={project.github} target="_blank" rel="noreferrer" data-cursor-label="Open">
                     <Github size={17} /> View on GitHub <ArrowUpRight size={16} />
                   </a>
                 ) : (

@@ -10,6 +10,7 @@ export function WhatsAppButton() {
       rel="noreferrer"
       aria-label="Contact Aditya on WhatsApp"
       data-tooltip="Chat on WhatsApp"
+      data-cursor-label="Chat"
     >
       <svg viewBox="0 0 32 32" aria-hidden="true">
         <path

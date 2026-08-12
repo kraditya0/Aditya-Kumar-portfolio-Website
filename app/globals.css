@@ -175,6 +175,24 @@ button {
   transition: background 250ms ease, border-color 250ms ease;
 }
 
+.scroll-progress {
+  position: fixed;
+  z-index: 130;
+  inset: 0 0 auto;
+  height: 2px;
+  background: transparent;
+  pointer-events: none;
+}
+
+.scroll-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--lime), var(--cyan));
+  box-shadow: 0 0 12px rgba(100, 217, 211, 0.28);
+  transform-origin: left;
+}
+
 .navbar-scrolled {
   background: rgba(8, 10, 12, 0.82);
   border-color: rgba(255, 255, 255, 0.07);
@@ -203,6 +221,13 @@ button {
   color: var(--lime);
   border-color: var(--line-bright);
   transform: translateY(-1px);
+}
+
+.theme-icon {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
 }
 
 .brand {
@@ -1116,7 +1141,11 @@ button {
 .contact-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; }
 .contact-copy { align-self: start; position: sticky; top: 110px; }
 .contact-copy .section-lead { max-width: 440px; }
-.contact-email { display: flex; align-items: center; gap: 10px; width: max-content; max-width: 100%; margin: 34px 0 18px; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.contact-email-row { display: flex; align-items: center; gap: 9px; width: max-content; max-width: 100%; margin: 34px 0 18px; }
+.contact-email { display: flex; align-items: center; gap: 10px; min-width: 0; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.copy-email-button { min-height: 32px; display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; padding: 0 9px; border: 1px solid var(--line); border-radius: 3px; background: transparent; color: var(--dim); font-family: var(--font-geist-mono), monospace; font-size: 8px; cursor: pointer; transition: color 180ms ease, border-color 180ms ease, background 180ms ease; }
+.copy-email-button:hover { border-color: var(--cyan); background: var(--panel); color: var(--text); }
+.copy-email-button svg { color: var(--cyan); }
 .contact-copy > .button { width: max-content; }
 .contact-form-wrap { border-top: 1px solid var(--line-bright); }
 .contact-form { padding-top: 32px; }
@@ -1333,6 +1362,8 @@ button {
   .social-links > a:last-child { border-bottom: 0; }
   .field-row { grid-template-columns: 1fr; gap: 0; }
   .contact-email { font-size: 11px; }
+  .contact-email-row { width: 100%; align-items: flex-start; }
+  .contact-email { flex: 1; padding-top: 8px; }
   .final-cta { min-height: 500px; }
   .final-cta h2 { font-size: clamp(49px, 15vw, 68px); }
   .footer-top { flex-direction: column; gap: 36px; }

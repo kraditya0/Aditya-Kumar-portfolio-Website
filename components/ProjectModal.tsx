@@ -43,7 +43,7 @@ export function ProjectModal({ project, onClose }: { project: Project | null; on
             initial={reduceMotion ? false : { opacity: 0, y: 30, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.98 }}
-            transition={{ duration: 0.28 }}
+            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="modal-topline">
               <span>{project.number} / PROJECT DETAIL</span>
@@ -53,17 +53,27 @@ export function ProjectModal({ project, onClose }: { project: Project | null; on
             </div>
             <div className="modal-heading">
               <p>{project.category}</p>
-              <h2 id="project-modal-title">{project.title}</h2>
+              <motion.h2 layoutId={`project-title-${project.id}`} id="project-modal-title">{project.title}</motion.h2>
             </div>
             <div className="modal-grid">
-              <div className="modal-main">
+              <motion.div
+                className="modal-main"
+                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: reduceMotion ? 0 : 0.12, duration: 0.4 }}
+              >
                 <DetailBlock title="Overview"><p>{project.description}</p></DetailBlock>
                 <DetailBlock title="Problem"><p>{project.problem}</p></DetailBlock>
                 <DetailBlock title="Solution"><p>{project.solution}</p></DetailBlock>
                 <DetailBlock title="Technical Implementation"><p>{project.implementation}</p></DetailBlock>
                 <DetailBlock title="Results"><p className="result-copy">{project.result}</p></DetailBlock>
-              </div>
-              <aside className="modal-aside">
+              </motion.div>
+              <motion.aside
+                className="modal-aside"
+                initial={reduceMotion ? false : { opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: reduceMotion ? 0 : 0.18, duration: 0.4 }}
+              >
                 <h3>Key Features</h3>
                 <ul>{project.features.map((feature) => <li key={feature}><Check size={14} />{feature}</li>)}</ul>
                 <h3>Technology Stack</h3>
@@ -75,7 +85,7 @@ export function ProjectModal({ project, onClose }: { project: Project | null; on
                 ) : (
                   <p className="repository-note"><Github size={16} /> Repository link not provided</p>
                 )}
-              </aside>
+              </motion.aside>
             </div>
           </motion.div>
         </motion.div>

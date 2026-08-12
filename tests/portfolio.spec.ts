@@ -22,6 +22,7 @@ test("desktop portfolio interactions and layout", async ({ page }) => {
     "href",
     "https://wa.me/918766382326?text=Hi%20Aditya%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20connect.",
   );
+  await expect(page.locator(".scroll-progress")).toBeVisible();
 
   await page.getByRole("button", { name: "Switch to light theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
@@ -41,13 +42,15 @@ test("desktop portfolio interactions and layout", async ({ page }) => {
   await expect(dialog).toBeHidden();
 
   await page.locator("#contact").scrollIntoViewIfNeeded();
+  await page.getByRole("button", { name: "Copy email address" }).click();
+  await expect(page.getByRole("button", { name: "Email copied" })).toBeVisible();
   await page.getByRole("button", { name: "Send Message" }).click();
   await expect(page.getByText("Please enter your name.")).toBeVisible();
   await expect(page.getByText("Enter a valid email address.")).toBeVisible();
   await expect(page.getByText("Please add a little more detail.")).toBeVisible();
 
   await page.getByLabel("Name").fill("Portfolio Visitor");
-  await page.getByLabel("Email").fill("visitor@example.com");
+  await page.getByRole("textbox", { name: "Email" }).fill("visitor@example.com");
   await page.getByLabel("Message").fill("I would like to discuss a suitable engineering opportunity.");
   await page.getByRole("button", { name: "Send Message" }).click();
   await expect(page.getByRole("status")).toContainText("message has been sent successfully");

@@ -27,6 +27,7 @@ import { Navbar } from "./Navbar";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
 import { Reveal } from "./Reveal";
+import { ScrollProgress } from "./ScrollProgress";
 import { WhatsAppButton } from "./WhatsAppButton";
 
 const buildCards = [
@@ -72,6 +73,7 @@ export function Portfolio() {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <BackgroundEffects />
+      <ScrollProgress />
       <Navbar />
       <main id="main-content">
         <Hero />
@@ -119,7 +121,7 @@ function About() {
         <div className="about-grid">
           <Reveal className="about-copy">
             <p>
-              I&apos;m pursuing a <strong>BS in Data Science and Applications at IIT Madras</strong>,
+              I&apos;m pursuing a <strong>Bachelor's in Data Science and Ai at IIT Madras</strong>,
               with hands-on experience building machine learning models, web applications, APIs,
               and data-driven solutions.
             </p>
@@ -222,7 +224,7 @@ function Projects({ onSelect }: { onSelect: (project: Project) => void }) {
     <section className="section projects-section" id="projects">
       <div className="container">
         <SectionHeading kicker="04 / Selected Work" title="Selected Projects" lead="Projects spanning machine learning, full-stack engineering, and data-driven applications." />
-        <div className="projects-list">{projects.map((project) => <ProjectCard key={project.id} project={project} onOpen={() => onSelect(project)} />)}</div>
+        <div className="projects-list">{projects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} onOpen={() => onSelect(project)} />)}</div>
       </div>
     </section>
   );
@@ -258,7 +260,7 @@ function Education() {
         <SectionHeading kicker="05 / Education" title="Foundation and continued learning." />
         <Reveal className="education-hero">
           <div className="education-mark"><GraduationCap size={30} /></div>
-          <div className="education-copy"><p>Indian Institute of Technology Madras</p><h3>Bachelor of Science in Data Science and Applications</h3><div><span>Expected 2027</span><span><MapPin size={14} /> Chennai, India</span></div></div>
+          <div className="education-copy"><p>Indian Institute of Technology Madras</p><h3>Bachelor's in Data Science and Ai</h3><div><span>Expected 2027</span><span><MapPin size={14} /> Chennai, India</span></div></div>
           <span className="education-code">IITM / BS</span>
         </Reveal>
         <div className="detail-grid">

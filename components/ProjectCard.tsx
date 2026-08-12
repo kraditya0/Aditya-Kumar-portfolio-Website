@@ -5,21 +5,21 @@ import { ArrowUpRight, Github } from "lucide-react";
 import type { Project } from "@/data/content";
 import { ProjectVisual } from "./ProjectVisuals";
 
-export function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
+export function ProjectCard({ project, index, onOpen }: { project: Project; index: number; onOpen: () => void }) {
   const reduceMotion = useReducedMotion();
 
   return (
     <motion.article
       className="project-card"
-      initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 38, scale: 0.985 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.12 }}
-      transition={{ duration: 0.65 }}
+      transition={{ duration: 0.72, delay: Math.min(index * 0.06, 0.12), ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="project-preview"><ProjectVisual type={project.id} /></div>
       <div className="project-content">
         <div className="project-meta"><span>{project.number}</span><p>{project.category}</p></div>
-        <h3>{project.title}</h3>
+        <motion.h3 layoutId={`project-title-${project.id}`}>{project.title}</motion.h3>
         <p className="project-description">{project.description}</p>
         <div className="tag-list">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
         <div className="project-actions">
@@ -29,7 +29,7 @@ export function ProjectCard({ project, onOpen }: { project: Project; onOpen: () 
           {project.github ? (
             <a href={project.github} target="_blank" rel="noreferrer"><Github size={17} /> GitHub</a>
           ) : (
-            <span className="repo-unavailable"><Github size={16} /> GitHub link pending</span>
+            <span className="repo-unavailable"><Github size={16} /> GitHub </span>
           )}
         </div>
       </div>

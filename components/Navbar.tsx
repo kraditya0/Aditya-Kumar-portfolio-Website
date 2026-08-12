@@ -92,7 +92,18 @@ export function Navbar() {
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
             title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                className="theme-icon"
+                key={theme}
+                initial={reduceMotion ? false : { opacity: 0, rotate: -70, scale: 0.65 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={reduceMotion ? undefined : { opacity: 0, rotate: 70, scale: 0.65 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </motion.span>
+            </AnimatePresence>
           </button>
           <a href="#contact" className="nav-cta desktop-cta">
             Let&apos;s Talk <ArrowUpRight size={16} aria-hidden="true" />

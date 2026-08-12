@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, LoaderCircle, Mail } from "lucide-react";
+import { ArrowRight, Check, Copy, LoaderCircle, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { contact } from "@/data/content";
 import { ResumeLink } from "./ResumeLink";
@@ -19,6 +19,23 @@ export function Contact() {
   const [fields, setFields] = useState(initialFields);
   const [errors, setErrors] = useState<Errors>({});
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(contact.email);
+    } catch {
+      const input = document.createElement("input");
+      input.value = contact.email;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      input.remove();
+    }
+
+    setEmailCopied(true);
+    window.setTimeout(() => setEmailCopied(false), 2200);
+  }
 
   function validate() {
     const next: Errors = {};
@@ -71,7 +88,19 @@ export function Contact() {
           <p className="section-kicker">06 / Contact</p>
           <h2>Let&apos;s build something useful.</h2>
           <p className="section-lead">Have a project, idea, or opportunity? I&apos;d love to hear about it.</p>
-          <a href={`mailto:${contact.email}`} className="contact-email"><Mail size={18} />{contact.email}</a>
+          <div className="contact-email-row">
+            <a href={`mailto:${contact.email}`} className="contact-email"><Mail size={18} />{contact.email}</a>
+            <button
+              className="copy-email-button"
+              type="button"
+              onClick={copyEmail}
+              aria-label={emailCopied ? "Email copied" : "Copy email address"}
+              title={emailCopied ? "Copied" : "Copy email"}
+            >
+              {emailCopied ? <Check size={15} /> : <Copy size={15} />}
+              <span aria-live="polite">{emailCopied ? "Copied" : "Copy"}</span>
+            </button>
+          </div>
           <ResumeLink />
         </Reveal>
 
